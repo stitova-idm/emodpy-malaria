@@ -153,6 +153,7 @@ def add_campaign_event(campaign,
                        repetitions: int = 1,
                        timesteps_between_repetitions: int = 365,
                        ind_property_restrictions: list = None,
+                       node_property_restrictions: list = None,
                        target_age_min: float = 0,
                        target_age_max: float = 125,
                        target_gender: str = "All",
@@ -178,6 +179,13 @@ def add_campaign_event(campaign,
             Sets **Timesteps_Between_Repetitions**
         ind_property_restrictions: A list of dictionaries of IndividualProperties, which are needed for the individual
             to receive the intervention. Sets the **Property_Restrictions_Within_Node**
+        node_property_restrictions: A list of dictionaries the **NodeProperty** key:value pairs, as defined in the
+            demographics file, that the node in which the individual is currently located must have in order to be
+            targeted for the intervention. You can specify AND and OR combinations of key:value pairs with this
+            parameter. The key:value pairs in the same dictionary are combined with AND, and the dictionaries in the
+            list are combined with OR. For example, if you want to target nodes with the node properties
+            [ {"Key1": "Value1", "Key2": "Value2"}, {"Key1": "Value3"} ], this will be interpreted as the node needs
+            to have Ke1=Value1 AND Key2=Value2 OR Key1=Value3 to get the intervention.
         target_age_min: The lower end of ages targeted for an intervention, in years. Sets **Target_Age_Min**
         target_age_max: The upper end of ages targeted for an intervention, in years. Sets **Target_Age_Max**
         target_gender: The gender targeted for an intervention: All, Male, or Female.
@@ -229,21 +237,10 @@ def add_campaign_event(campaign,
 
         # configuring the coordinator
         coordinator = s2c.get_class_with_defaults("StandardEventCoordinator", schema_path)
-        if target_num_individuals is not None:
-            coordinator.Target_Num_Individuals = target_num_individuals
-        else:
-            coordinator.Demographic_Coverage = demographic_coverage
         coordinator.Number_Repetitions = repetitions
         coordinator.Timesteps_Between_Repetitions = timesteps_between_repetitions
-        coordinator.Property_Restrictions_Within_Node = ind_property_restrictions if ind_property_restrictions else []
-        coordinator.Property_Restrictions = []  # not using; Property_Restrictions_Within_Node are more flexible
+        coordinator.Node_Property_Restrictions = node_property_restrictions
 
-        if target_age_min > 0 or target_age_max < 125:
-            coordinator.Target_Age_Min = target_age_min
-            coordinator.Target_Age_Max = target_age_max
-        if target_gender != "All":
-            coordinator.Target_Gender = target_gender
-            coordinator.Target_Demographic = "ExplicitAgeRangesAndGender"
 
         event.Event_Coordinator_Config = coordinator
         coordinator.Intervention_Config = intervention
