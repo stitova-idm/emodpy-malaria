@@ -68,36 +68,36 @@ def build_campaign(spraying_coverage=0.8,
     campaign.set_schema(manifest.schema_file)
     #add_scheduled_usage_dependent_bednet(campaign, start_day=bednet_start_day, demographic_coverage=bednet_coverage)
 
-"""
-Requirements:  We want a "Node SpatialRepellent that Kills" intervention that affects the vectors that are going to
- try to feed that day. The meal-seeking vectors that are flying around the area all would encounter the spatial 
- repellent, some would be repelled and some would be killed. The vectors that did not get repelled or killed would
-  then go on to either feed outdoors or enter the house and feed indoors (or animal feed or artificial diet feed).  
-
-Good News: Node SpatialRepellent repels meal-seeking vectors whether the feed indoors or outdoors (also repells 
-them from animal feeds and atrifical diet)
-
-Problems: Old (solved): Using SpaceSpraying instead of "Node SpatialRepellent that Kills" affects all vectors,
- males and females. This is easily solved by having an insecticide that doesn't affect male vectors.
- 
-New problem 1 (solvable): SpaceSpraying does not affect the female vectors that will be looking to feed indoors
- that that day (I guess they live indoors?). This can be worked around by using IRS to kill the indoor-feeding 
- vectors that make it past repelling. 
- 
-New problem 2 (un-solvable): However, it also affects all females, meal-seeking and not and there's not a way 
-for us to differentiate between them within the intervention. The closest solution would be to multiply the 
-Initial_Effect of killing by 1/days_between_feeds (+math for indoor-feeding portion), which would reduce the 
-number of killed females to be the same as if we were killing only meal-seeking females, HOWEVER, this would 
-kill out of the entire female population (minus indoor-feeding), rather than from the meal-seeking females (ex:
- 100 vectors, 4 days_between_feeds, 0% indoor feeding, 0.5 killing, would kill half the vectors trying to feed 
- on the day, which would be 25 * 0.5 = 12.5; so we can replicate that by saying that our killing = 0.5 * (1/4), 
- but it wouldn't be the same vectors dying, we would be leaving 3/4 of outdoor meal-seeking vectors alive that 
- should be dead).
- 
-If my description for the Requirements is correct, we do not have a combination of interventions that can be
- used to replicate "Node SpatialRepellent that Kills" intervention without changes in EMOD. 
-
-"""
+    """
+    Requirements:  We want a "Node SpatialRepellent that Kills" intervention that affects the vectors that are going to
+     try to feed that day. The meal-seeking vectors that are flying around the area all would encounter the spatial 
+     repellent, some would be repelled and some would be killed. The vectors that did not get repelled or killed would
+      then go on to either feed outdoors or enter the house and feed indoors (or animal feed or artificial diet feed).  
+    
+    Good News: Node SpatialRepellent repels meal-seeking vectors whether the feed indoors or outdoors (also repells 
+    them from animal feeds and atrifical diet)
+    
+    Problems: Old (solved): Using SpaceSpraying instead of "Node SpatialRepellent that Kills" affects all vectors,
+     males and females. This is easily solved by having an insecticide that doesn't affect male vectors.
+     
+    New problem 1 (solvable): SpaceSpraying does not affect the female vectors that will be looking to feed indoors
+     that that day (I guess they live indoors?). This can be worked around by using IRS to kill the indoor-feeding 
+     vectors that make it past repelling. 
+     
+    New problem 2 (un-solvable): However, it also affects all females, meal-seeking and not and there's not a way 
+    for us to differentiate between them within the intervention. The closest solution would be to multiply the 
+    Initial_Effect of killing by 1/days_between_feeds (+math for indoor-feeding portion), which would reduce the 
+    number of killed females to be the same as if we were killing only meal-seeking females, HOWEVER, this would 
+    kill out of the entire female population (minus indoor-feeding), rather than from the meal-seeking females (ex:
+     100 vectors, 4 days_between_feeds, 0% indoor feeding, 0.5 killing, would kill half the vectors trying to feed 
+     on the day, which would be 25 * 0.5 = 12.5; so we can replicate that by saying that our killing = 0.5 * (1/4), 
+     but it wouldn't be the same vectors dying, we would be leaving 3/4 of outdoor meal-seeking vectors alive that 
+     should be dead).
+     
+    If my description for the Requirements is correct, we do not have a combination of interventions that can be
+     used to replicate "Node SpatialRepellent that Kills" intervention without changes in EMOD. 
+    
+    """
     # Combo SpaceSpraying and SpatialRepellent and IRS repellent, mimics a spatial repellent that sits by the entrance
     # to the house and repels vectors from biting outdoors and entering the house and also kills some of them.
     # SpatialRepellent repels outdoor-feeding vectors, SpaceSpraying kills ALL the vectors present (male, female,
